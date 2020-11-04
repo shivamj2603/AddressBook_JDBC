@@ -16,14 +16,14 @@ public class Contact {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 	}
-	private String firstName;
-	private String lastName;
+	public String firstName;
+	public String lastName;
 	private String address;
 	private String city;
 	private String state;
 	private int zip;
-	private long phoneNumber;
-	private String email;
+	public long phoneNumber;
+	public String email;
 
 	public String getFirstName() {
 		return firstName;

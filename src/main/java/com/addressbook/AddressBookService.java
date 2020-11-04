@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,6 @@ import com.opencsv.CSVWriter;
 public class AddressBookService {
 	private List<Contact> contactList = new ArrayList<Contact>();
 	private AddressBookDBService addressBookDBService;
-	
 	public AddressBookService() {
 		addressBookDBService = AddressBookDBService.getInstance();
 	}
@@ -108,5 +108,25 @@ public class AddressBookService {
 	public List<Contact> readContactDBData() throws DatabaseException {
 			this.contactList = addressBookDBService.readData();
 		return this.contactList;
+	}
+	public void updateContactData(String firstName, String lastName, long phone) throws DatabaseException, SQLException{
+		int result = addressBookDBService.updateContactData(firstName, lastName, phone);
+		if(result == 0) {
+			return;
+		}
+		Contact contact = this.getContact(firstName, lastName);
+		if(contact != null) {
+			contact.phoneNumber = phone;
+		}
+	}
+	private Contact getContact(String firstName, String lastName) {
+		Contact contact = this.contactList.stream().filter(contactData -> contactData.firstName.equals(firstName) && contactData.lastName.equals(lastName))
+				.findFirst().orElse(null);
+		return contact;
+	}
+	public boolean checkContactDataSync(String firstName, String lastName) throws DatabaseException, SQLException {
+		List<Contact> contactList = addressBookDBService.getContactData(firstName, lastName);
+		return contactList.get(0).equals(getContact(firstName, lastName));
+
 	}
 }
