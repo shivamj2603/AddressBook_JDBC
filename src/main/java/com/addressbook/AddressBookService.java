@@ -109,6 +109,9 @@ public class AddressBookService {
 			exception.printStackTrace();
 		}
 	}
+	public void addContact(String firstName, String lastName, String city, String state, int zip, int bookid, String phonenumber, String email) throws DatabaseException, SQLException {
+		addressBookDBService.addContact(firstName, lastName, city, state, zip, bookid, phonenumber, email);
+	}
 	public List<Contact> readContactDBData() throws DatabaseException {
 			this.contactList = addressBookDBService.readData();
 		return this.contactList;
