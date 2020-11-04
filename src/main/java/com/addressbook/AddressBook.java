@@ -2,9 +2,16 @@ package com.addressbook;
 import java.util.*;
 
 public class AddressBook {
+	public int bookId;
 	public String name;
+	public String type;
 	public AddressBook(String name) {
 		this.name = name;
+	}
+	public AddressBook(int bookId, String name, String type) {
+		this(name);
+		this.bookId = bookId;
+		this.type = type;
 	}
 
 	public ArrayList<Contact> addressBook = new ArrayList<Contact>();

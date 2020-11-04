@@ -3,10 +3,13 @@ package com.addressbook;
 public class Contact {
 	public Contact(String firstName, String lastName, String address, String city, String state, int zip,
 			long phoneNumber, String email) {
-		super();
+		this(firstName, lastName, city, state, zip, phoneNumber, email);
+		this.address = address;
+	}
+	public Contact(String firstName, String lastName, String city, String state, int zip,
+			long phoneNumber, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.address = address;
 		this.city = city;
 		this.state = state;
 		this.zip = zip;
