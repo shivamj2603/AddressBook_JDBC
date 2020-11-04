@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -128,5 +129,9 @@ public class AddressBookService {
 		List<Contact> contactList = addressBookDBService.getContactData(firstName, lastName);
 		return contactList.get(0).equals(getContact(firstName, lastName));
 
+	}
+	public List<Contact> getContactByDate(LocalDate start, LocalDate end) throws DatabaseException {
+		// TODO Auto-generated method stub
+		return addressBookDBService.readDataForGivenDateRange(start, end);
 	}
 }

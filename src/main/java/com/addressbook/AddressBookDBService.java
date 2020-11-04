@@ -1,5 +1,6 @@
 package com.addressbook;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -108,5 +109,9 @@ public class AddressBookDBService {
 		prepareStatement.setString(2, firstName);
 		prepareStatement.setString(3, lastName);
 		return prepareStatement.executeUpdate();
+	}
+	public List<Contact> readDataForGivenDateRange(LocalDate start, LocalDate end) throws DatabaseException{
+		String sql = String.format("Select * from contacts inner join address using(contactid) where date_added between '%s' and '%s' ;", Date.valueOf(start), Date.valueOf(end));
+	    return getContactData(sql);
 	}
 }
