@@ -1,7 +1,7 @@
 package addressbooktest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import com.addressbook.AddressBookService;
@@ -23,6 +23,14 @@ public class AddressBookTest {
 		addressBookService.readContactDBData();
 		boolean result = addressBookService.checkContactDataSync("Shivam", "Jaiswal");
 		assertEquals(true, result);
+	}
+	@Test
+	public void givenDateRangeForContactsAddedInDateRange_ShouldMatchCount() throws DatabaseException, SQLException {
+		AddressBookService addressBookService = new AddressBookService();
+		LocalDate start = LocalDate.of(2017, 01, 01);
+		LocalDate end = LocalDate.now();
+		List<Contact> contactList = addressBookService.getContactByDate(start, end);
+		assertEquals(3, contactList.size());
 	}
 
 }
