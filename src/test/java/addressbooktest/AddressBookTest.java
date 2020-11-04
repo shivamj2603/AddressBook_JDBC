@@ -44,5 +44,11 @@ public class AddressBookTest {
 		AddressBookService addressBookService = new AddressBookService();
 		assertTrue(addressBookService.getContactByState().get("Maharashtra").equals(2));
 	}
-
+	@Test
+	public void givenContact_WhenAdded_ShouldMatchCount() throws DatabaseException, SQLException {
+		AddressBookService addressBookService = new AddressBookService();
+		addressBookService.addContact("Ramesh", "Powar", "Malad", "Kerala", 421201, 1, "20324843854", "rameshpowar@gmail.com");
+		List<Contact> contactList = addressBookService.readContactDBData();
+		assertEquals(contactList.size(), 4);
+	}
 }
