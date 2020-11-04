@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddressBookDBService {
 	private static AddressBookDBService addressBookDBService;
@@ -113,5 +115,22 @@ public class AddressBookDBService {
 	public List<Contact> readDataForGivenDateRange(LocalDate start, LocalDate end) throws DatabaseException{
 		String sql = String.format("Select * from contacts inner join address using(contactid) where date_added between '%s' and '%s' ;", Date.valueOf(start), Date.valueOf(end));
 	    return getContactData(sql);
+	}
+	public Map<String, Integer> getContactsByFunction(String function) throws  DatabaseException{
+		Map<String, Integer> contactMap = new HashMap<>();
+		String sql = String.format("select %s,count(*) from contacts join address using(contactid) group by %s;",function, function) ;
+		try {
+			Statement statement = getConnection().createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while(result.next()) {
+				String cityOrState = result.getString(1);
+				Integer count = result.getInt(2);
+				contactMap.put(cityOrState, count);
+			}
+		}
+		catch(SQLException exception) {
+			throw new DatabaseException("Unable to calculate");
+		}
+		return contactMap;
 	}
 }

@@ -7,18 +7,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonStreamParser;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
+import com.addressbook.DatabaseException;
 
 public class AddressBookService {
 	private List<Contact> contactList = new ArrayList<Contact>();
@@ -133,5 +136,11 @@ public class AddressBookService {
 	public List<Contact> getContactByDate(LocalDate start, LocalDate end) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return addressBookDBService.readDataForGivenDateRange(start, end);
+	}
+	public Map<String, Integer> getContactByCity() throws DatabaseException{
+		return addressBookDBService.getContactsByFunction("city");
+	}
+	public Map<String, Integer> getContactByState() throws DatabaseException{
+		return addressBookDBService.getContactsByFunction("state");
 	}
 }
