@@ -57,6 +57,7 @@ public class AddressBookDBService {
 		String sql = "select * from contacts inner join address using(contactid) inner join bookmap using(contactid) inner join addressbook using(bookid) ; " ;
 		return this.getContactData(sql);
 	}
+	//Add contact using transaction
 	public Contact addContact(String firstName, String lastName, String city, String state, int zip, int bookid, String phonenumber, String email) throws SQLException, DatabaseException {
 		int contactId = -1;
 		Connection connection = null;
@@ -67,10 +68,13 @@ public class AddressBookDBService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		try (Statement statement = connection.createStatement()) {
-			String sql = String.format("insert into contacts(firstname, lastname, phonenumber, email, date_added) "
-					+ "VALUES ('%s','%s', %d,'%s') ;", firstName, lastName, Long.parseLong(phonenumber), email, Date.valueOf(LocalDate.now()));
+		try {
+			Statement statement = connection.createStatement();
+            String date = "2018-01-09";
+			String sql = String.format("insert into contacts "
+					+ "values ('%s','%s', %d,'%s','%s') ;", firstName, lastName, Long.parseLong(phonenumber), email, date);
 			int rowAffected = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+			//if query successful
 			if (rowAffected == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
 				if (resultSet.next()) {
@@ -141,6 +145,7 @@ public class AddressBookDBService {
 		}
 		return contactList;		
 	}
+	//fetch contact by name
 	public List<Contact> getContactData(String firstName, String lastName) throws DatabaseException{
 		try {
 			getPreparedStatement();
@@ -152,6 +157,7 @@ public class AddressBookDBService {
 			throw new DatabaseException("Unable to get contact data");
 		}
 	}
+	//Populate resultset to contact object
 	private List<Contact> getContactData(ResultSet resultSet) throws DatabaseException {
 		List<Contact> contactList = new ArrayList<Contact>();
 		try {
@@ -171,6 +177,15 @@ public class AddressBookDBService {
 		}
 		return contactList;
 	}
+	/**
+	 * Usecase 17:
+	 * @param firstName
+	 * @param lastName
+	 * @param phone
+	 * @return
+	 * @throws DatabaseException
+	 * @throws SQLException
+	 */
 	public int updateContactData(String firstName, String lastName, long phone) throws DatabaseException, SQLException {
 		connection = this.getConnection();
 		String sql = "Update contacts inner join address using(contactId) set phonenumber = ? where firstname = ? and lastname = ? ; " ; 
@@ -180,10 +195,23 @@ public class AddressBookDBService {
 		prepareStatement.setString(3, lastName);
 		return prepareStatement.executeUpdate();
 	}
+	/**
+	 * Usecase 18:
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws DatabaseException
+	 */
 	public List<Contact> readDataForGivenDateRange(LocalDate start, LocalDate end) throws DatabaseException{
 		String sql = String.format("Select * from contacts inner join address using(contactid) where date_added between '%s' and '%s' ;", Date.valueOf(start), Date.valueOf(end));
 		return getContactData(sql);
 	}
+	/**
+	 * Usecase 19:
+	 * @param function
+	 * @return
+	 * @throws DatabaseException
+	 */
 	public Map<String, Integer> getContactsByFunction(String function) throws  DatabaseException{
 		Map<String, Integer> contactMap = new HashMap<>();
 		String sql = String.format("select %s,count(*) from contacts join address using(contactid) group by %s;",function, function) ;

@@ -109,6 +109,19 @@ public class AddressBookService {
 			exception.printStackTrace();
 		}
 	}
+	/**
+	 * Add Contact to the database
+	 * @param firstName
+	 * @param lastName
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param bookid
+	 * @param phonenumber
+	 * @param email
+	 * @throws DatabaseException
+	 * @throws SQLException
+	 */
 	public void addContact(String firstName, String lastName, String city, String state, int zip, int bookid, String phonenumber, String email) throws DatabaseException, SQLException {
 		addressBookDBService.addContact(firstName, lastName, city, state, zip, bookid, phonenumber, email);
 	}
@@ -126,23 +139,54 @@ public class AddressBookService {
 			contact.phoneNumber = phone;
 		}
 	}
+	/**
+	 * fetch contact for a given name
+	 * @param firstName
+	 * @param lastName
+	 * @return
+	 */
 	private Contact getContact(String firstName, String lastName) {
 		Contact contact = this.contactList.stream().filter(contactData -> contactData.firstName.equals(firstName) && contactData.lastName.equals(lastName))
 				.findFirst().orElse(null);
 		return contact;
 	}
+	/**
+	 * Check whether the contact list is in sync with the database
+	 * @param firstName
+	 * @param lastName
+	 * @return
+	 * @throws DatabaseException
+	 * @throws SQLException
+	 */
 	public boolean checkContactDataSync(String firstName, String lastName) throws DatabaseException, SQLException {
 		List<Contact> contactList = addressBookDBService.getContactData(firstName, lastName);
 		return contactList.get(0).equals(getContact(firstName, lastName));
 
 	}
+	/**
+	 * Function to get list of contacts added in a given date range
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws DatabaseException
+	 */
 	public List<Contact> getContactByDate(LocalDate start, LocalDate end) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return addressBookDBService.readDataForGivenDateRange(start, end);
 	}
+	/**
+	 * Function to get number of contacts by city
+	 * @return
+	 * @throws DatabaseException
+	 */
 	public Map<String, Integer> getContactByCity() throws DatabaseException{
 		return addressBookDBService.getContactsByFunction("city");
 	}
+	/**
+	 * Function to get number of contacts by state
+	 * @return
+	 * @throws DatabaseException
+	 */
 	public Map<String, Integer> getContactByState() throws DatabaseException{
 		return addressBookDBService.getContactsByFunction("state");
 	}
