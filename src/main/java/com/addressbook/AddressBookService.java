@@ -1,5 +1,4 @@
 package com.addressbook;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -110,6 +109,7 @@ public class AddressBookService {
 		}
 	}
 	/**
+	 * Usecase 20:
 	 * Add Contact to the database
 	 * @param firstName
 	 * @param lastName
@@ -125,6 +125,12 @@ public class AddressBookService {
 	public void addContact(String firstName, String lastName, String city, String state, int zip, int bookid, String phonenumber, String email) throws DatabaseException, SQLException {
 		addressBookDBService.addContact(firstName, lastName, city, state, zip, bookid, phonenumber, email);
 	}
+	/**
+	 * Usecase 16:
+	 * Retreive contacts
+	 * @return
+	 * @throws DatabaseException
+	 */
 	public List<Contact> readContactDBData() throws DatabaseException {
 			this.contactList = addressBookDBService.readData();
 		return this.contactList;
@@ -161,7 +167,6 @@ public class AddressBookService {
 	public boolean checkContactDataSync(String firstName, String lastName) throws DatabaseException, SQLException {
 		List<Contact> contactList = addressBookDBService.getContactData(firstName, lastName);
 		return contactList.get(0).equals(getContact(firstName, lastName));
-
 	}
 	/**
 	 * Function to get list of contacts added in a given date range

@@ -1,7 +1,6 @@
 package addressbooktest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -10,7 +9,7 @@ import com.addressbook.AddressBookService;
 import com.addressbook.Contact;
 import com.addressbook.DatabaseException;
 
-public class AddressBookTest {
+public class AddressBookServiceTest {
 	@Test
 	public void givenContactDataInDB_WhenRetrieved_ShouldMatchContactCount() throws DatabaseException {
 		AddressBookService addressBookService = new AddressBookService();
@@ -49,6 +48,6 @@ public class AddressBookTest {
 		AddressBookService addressBookService = new AddressBookService();
 		addressBookService.addContact("Ramesh", "Powar", "Malad", "Kerala", 421201, 1, "20324843854", "rameshpowar@gmail.com");
 		List<Contact> contactList = addressBookService.readContactDBData();
-		assertEquals(contactList.size(), 4);
+		assertEquals(contactList.size(), 5);
 	}
 }

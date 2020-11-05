@@ -70,15 +70,14 @@ public class AddressBookDBService {
 		}
 		try {
 			Statement statement = connection.createStatement();
-            String date = "2018-01-09";
-			String sql = String.format("insert into contacts "
-					+ "values ('%s','%s', %d,'%s','%s') ;", firstName, lastName, Long.parseLong(phonenumber), email, date);
+			String sql = String.format("insert into contacts (firstName, lastName,phonenumber, email, date_added)"
+					+ "values ('%s','%s', %s,'%s','%s') ;", firstName, lastName, Long.parseLong(phonenumber), email, Date.valueOf(LocalDate.now()));
 			int rowAffected = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			//if query successful
 			if (rowAffected == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
 				if (resultSet.next()) {
-					contactId = resultSet.getInt("contactId");
+					contactId = resultSet.getInt(1);
 				}
 			}
 		} catch (SQLException exception1) {

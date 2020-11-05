@@ -24,7 +24,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 public class AddressBookMain {
-
 	public static Map<String, AddressBook> addressBookMap = new HashMap<>();
 	public static Map<String, Map<String, AddressBook>> stateBookMap = new HashMap<>();
 	public void addData(Scanner input) {
