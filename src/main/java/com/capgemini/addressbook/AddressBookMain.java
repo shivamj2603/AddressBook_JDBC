@@ -31,7 +31,6 @@ public class AddressBookMain {
 		do {
 			System.out.println("Enter the name of state");
 			String stateForMap = input.nextLine();
-
 			do {
 				System.out.println("Enter the name of city");
 				String cityForMap = input.nextLine();
@@ -57,7 +56,7 @@ public class AddressBookMain {
 					input.nextLine();
 					System.out.println("Enter the email");
 					String email = input.nextLine();
-					Contact c = new Contact(firstName, lastName, address, cityForMap, stateForMap, zip, phoneNumber, email);
+					Contact c = new Contact(firstName, lastName, cityForMap, stateForMap, zip, phoneNumber, email);
 					for (Map.Entry<String, AddressBook> entry : addressBookMap.entrySet()) {
 						if (entry.getKey().equalsIgnoreCase(cityForMap)) {
 							entry.getValue().addContact(c);

@@ -16,6 +16,13 @@ public class Contact {
 		this(firstName, lastName, city, state, zip, phoneNumber, email);
 		this.type = type;
 	}
+	public Contact(int id, String firstName, String lastName, String city, String state, int zip,
+			long phoneNumber, String email, int type) {
+		this(firstName, lastName, city, state, zip, phoneNumber, email);
+		this.type = type;
+		this.id = id;
+	}
+	public int id;
 	public String firstName;
 	public String lastName;
 	private String address;

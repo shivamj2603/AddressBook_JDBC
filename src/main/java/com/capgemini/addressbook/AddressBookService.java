@@ -30,6 +30,9 @@ public class AddressBookService {
 	public AddressBookService() {
 		addressBookDBService = AddressBookDBService.getInstance();
 	}
+	public AddressBookService(List<Contact> contactList){
+		this.contactList = contactList;
+	}
 	public static void writeAddressBook(Map<String, AddressBook> map) {
 		StringBuffer buffer = new StringBuffer("");
 		for(String city : map.keySet()) {
@@ -96,7 +99,7 @@ public class AddressBookService {
 		BufferedReader br;
 		try {
 			br = new BufferedReader(
-					new FileReader(Paths.get("addressBook.json").toFile()));
+					new FileReader(Paths.get("contact.json").toFile()));
 			JsonStreamParser parser = new JsonStreamParser(br);
 			while(parser.hasNext())
 			{
@@ -109,6 +112,9 @@ public class AddressBookService {
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
+	}
+	public int getCount() {
+		return this.contactList.size();
 	}
 	/**
 	 * Usecase 20:
