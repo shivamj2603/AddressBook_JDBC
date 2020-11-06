@@ -1,0 +1,26 @@
+{
+  "Contact": [
+    {
+      "id" : 20
+      "firstName": "Shivam",
+      "lastName": "Jaiswal",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "zip": 42,
+      "phoneNumber": 8850273350,
+      "email": "abcd@gmail.com",
+      "type":1
+    },
+{
+      "id" : 21
+      "firstName": "Shivam",
+      "lastName": "Jaiswal",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "zip": 42,
+      "phoneNumber": 8850273350,
+      "email": "abcd@gmail.com",
+      "type":1
+    }
+  ]
+}
