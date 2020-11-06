@@ -227,4 +227,8 @@ public class AddressBookService {
 	public Map<String, Integer> getContactByState() throws DatabaseException{
 		return addressBookDBService.getContactsByFunction("state");
 	}
+	public void deleteContact(String firstName, String lastName) {
+		Contact contact = this.getContact(firstName,lastName);
+		this.contactList.remove(contact);
+	}	
 }
