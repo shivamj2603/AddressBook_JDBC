@@ -183,7 +183,7 @@ public class AddressBookService {
 	 * @param lastName
 	 * @return
 	 */
-	private Contact getContact(String firstName, String lastName) {
+	public Contact getContact(String firstName, String lastName) {
 		Contact contact = this.contactList.stream().filter(contactData -> contactData.firstName.equals(firstName) && contactData.lastName.equals(lastName))
 				.findFirst().orElse(null);
 		return contact;
