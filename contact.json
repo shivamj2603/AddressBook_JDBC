@@ -1,7 +1,7 @@
 {
   "Contact": [
     {
-      "id" : 20
+      "id": 20,
       "firstName": "Shivam",
       "lastName": "Jaiswal",
       "city": "Mumbai",
@@ -9,18 +9,29 @@
       "zip": 42,
       "phoneNumber": 8850273350,
       "email": "abcd@gmail.com",
-      "type":1
+      "type": 1
     },
-{
-      "id" : 21
-      "firstName": "Shivam",
-      "lastName": "Jaiswal",
-      "city": "Mumbai",
+    {
+      "id": 23,
+      "firstName": "Hardik",
+      "lastName": "Pandya",
+      "city": "Ahmedabad",
       "state": "Maharashtra",
-      "zip": 42,
+      "zip": 444001,
       "phoneNumber": 8850273350,
       "email": "abcd@gmail.com",
-      "type":1
+      "type": 2
+    },
+    {
+      "id": 24,
+      "firstName": "Sachin",
+      "lastName": "Tendulkar",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "zip": 444001,
+      "phoneNumber": 7887483853,
+      "email": "abcd@gmail.com",
+      "type": 2
     }
   ]
 }
