@@ -1,4 +1,4 @@
-package com.addressbook;
+package com.capgemini.addressbook;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.addressbook.DatabaseException;
+
+import com.capgemini.addressbook.DatabaseException;
 
 public class AddressBookDBService {
 	private static AddressBookDBService addressBookDBService;
@@ -58,7 +59,7 @@ public class AddressBookDBService {
 		return this.getContactData(sql);
 	}
 	//Add contact using transaction
-	public Contact addContact(String firstName, String lastName, String city, String state, int zip, int bookid, String phonenumber, String email) throws SQLException, DatabaseException {
+	public Contact addContact(String firstName, String lastName, String city, String state, int zip, String phonenumber, String email, int type) throws SQLException, DatabaseException {
 		int contactId = -1;
 		Connection connection = null;
 		Contact contact = null;
@@ -104,7 +105,7 @@ public class AddressBookDBService {
 			String sql = String.format(
 					"INSERT INTO bookmap "
 							+ "VALUES (%d, %d) ;",
-							contactId, 2);
+							contactId, type);
 			int rowAffected = statement.executeUpdate(sql);
 			if(rowAffected == 1) {
 				contact = new Contact(firstName, lastName, city, state, zip, Long.parseLong(phonenumber), email);

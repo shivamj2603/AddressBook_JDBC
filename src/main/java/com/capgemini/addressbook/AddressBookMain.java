@@ -1,4 +1,4 @@
-package com.addressbook;
+package com.capgemini.addressbook;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;

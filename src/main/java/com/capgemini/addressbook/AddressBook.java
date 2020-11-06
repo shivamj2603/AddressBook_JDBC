@@ -1,4 +1,4 @@
-package com.addressbook;
+package com.capgemini.addressbook;
 import java.util.*;
 
 public class AddressBook {

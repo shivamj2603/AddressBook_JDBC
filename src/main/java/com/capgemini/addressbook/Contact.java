@@ -1,11 +1,6 @@
-package com.addressbook;
+package com.capgemini.addressbook;
 
 public class Contact {
-	public Contact(String firstName, String lastName, String address, String city, String state, int zip,
-			long phoneNumber, String email) {
-		this(firstName, lastName, city, state, zip, phoneNumber, email);
-		this.address = address;
-	}
 	public Contact(String firstName, String lastName, String city, String state, int zip,
 			long phoneNumber, String email) {
 		this.firstName = firstName;
@@ -16,14 +11,20 @@ public class Contact {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 	}
+	public Contact(String firstName, String lastName, String city, String state, int zip,
+			long phoneNumber, String email, int type) {
+		this(firstName, lastName, city, state, zip, phoneNumber, email);
+		this.type = type;
+	}
 	public String firstName;
 	public String lastName;
 	private String address;
-	private String city;
-	private String state;
-	private int zip;
+	public String city;
+	public String state;
+	public int zip;
 	public long phoneNumber;
 	public String email;
+	public int type;
 
 	public String getFirstName() {
 		return firstName;
