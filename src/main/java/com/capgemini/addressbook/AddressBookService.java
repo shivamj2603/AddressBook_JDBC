@@ -133,6 +133,9 @@ public class AddressBookService {
 	public void addContact(String firstName, String lastName, String city, String state, int zip, String phonenumber, String email, int type) throws DatabaseException, SQLException {
 		addressBookDBService.addContact(firstName, lastName, city, state, zip, phonenumber, email, type);
 	}
+	public void addContact(Contact contact) {
+		this.contactList.add(contact);
+	}
 	public void addContactToDB(List<Contact> contactList) {
 		contactList.forEach(contact -> {
 			Runnable task = () -> {
