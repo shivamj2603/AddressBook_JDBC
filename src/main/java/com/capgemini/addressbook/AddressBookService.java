@@ -94,7 +94,6 @@ public class AddressBookService {
 	}
 	
 	public static void readAsJson() {
-		String nextLine = "";
 		Gson gson = new Gson();
 		BufferedReader br;
 		try {
@@ -136,6 +135,12 @@ public class AddressBookService {
 	public void addContact(Contact contact) {
 		this.contactList.add(contact);
 	}
+	
+	/**
+	 * Usecase 21:
+	 * Add Contacts using threads
+	 * @param contactList
+	 */
 	public void addContactToDB(List<Contact> contactList) {
 		contactList.forEach(contact -> {
 			Runnable task = () -> {
@@ -164,7 +169,7 @@ public class AddressBookService {
 	 * @throws DatabaseException
 	 */
 	public List<Contact> readContactDBData() throws DatabaseException {
-			this.contactList = addressBookDBService.readData();
+        this.contactList = addressBookDBService.readData();
 		return this.contactList;
 	}
 	public void updateContactData(String firstName, String lastName, long phone) throws DatabaseException, SQLException{
@@ -185,7 +190,7 @@ public class AddressBookService {
 	 */
 	public Contact getContact(String firstName, String lastName) {
 		Contact contact = this.contactList.stream().filter(contactData -> contactData.firstName.equals(firstName) && contactData.lastName.equals(lastName))
-				.findFirst().orElse(null);
+				         .findFirst().orElse(null);
 		return contact;
 	}
 	/**
@@ -208,7 +213,6 @@ public class AddressBookService {
 	 * @throws DatabaseException
 	 */
 	public List<Contact> getContactByDate(LocalDate start, LocalDate end) throws DatabaseException {
-		// TODO Auto-generated method stub
 		return addressBookDBService.readDataForGivenDateRange(start, end);
 	}
 	/**
@@ -227,6 +231,11 @@ public class AddressBookService {
 	public Map<String, Integer> getContactByState() throws DatabaseException{
 		return addressBookDBService.getContactsByFunction("state");
 	}
+	/**
+	 * Delete contact from the contactList
+	 * @param firstName
+	 * @param lastName
+	 */
 	public void deleteContact(String firstName, String lastName) {
 		Contact contact = this.getContact(firstName,lastName);
 		this.contactList.remove(contact);
