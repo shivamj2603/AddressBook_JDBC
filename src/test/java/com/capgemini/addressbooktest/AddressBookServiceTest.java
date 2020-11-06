@@ -7,11 +7,17 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.addressbook.AddressBookService;
 import com.capgemini.addressbook.Contact;
 import com.capgemini.addressbook.DatabaseException;
+import com.google.gson.Gson;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 
 public class AddressBookServiceTest {
 	@Test
@@ -66,5 +72,24 @@ public class AddressBookServiceTest {
 		System.out.println("Duration with Thread: " + Duration.between(start, threadEnd));
 		long result = addressBookService.readContactDBData().size();
 		assertEquals(7, result);
+	}
+	@BeforeEach
+	public void setup() {
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 3000;
+	}
+	private Contact[] getContactList() {
+		Response response = RestAssured.get("/contact");
+		System.out.println("Contact entries in JSONServer:\n"+response.asString());
+		Contact[] arrayOfContact = new Gson().fromJson(response.asString(),Contact[].class);
+		return arrayOfContact;
+	}
+	@Test
+	public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchTheCount() {
+		Contact[] arrayOfContact = getContactList();
+		AddressBookService addressBookService = new AddressBookService(Arrays.asList(arrayOfContact));
+		long entries = addressBookService.getCount();
+		assertEquals(1,entries);
+		
 	}
 }
