@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -138,5 +139,18 @@ public class AddressBookServiceTest {
 		Response response = request.put("/contact/"+contact.id);
 		int statusCode = response.getStatusCode();
 		assertEquals(200,statusCode);			
+	}
+	@Test 
+	public void givenContactToDelete_WhenDeleted_ShouldMatch200ResponseAndCount() throws DatabaseException, SQLException {
+		Contact[] arrayOfContact = getContactList();
+		AddressBookService addService = new AddressBookService(new LinkedList<Contact>(Arrays.asList(arrayOfContact)));
+		Contact contact = addService.getContact("Sachin", "Tendulkar");
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type","application/json");
+		Response response = request.delete("/contact/"+contact.id);
+		int statusCode = response.getStatusCode();
+		assertEquals(200,statusCode);
+		addService.deleteContact(contact.firstName, contact.lastName);
+		assertEquals(2,getContactList().length);
 	}
 }
