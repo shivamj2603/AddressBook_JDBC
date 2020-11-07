@@ -26,7 +26,6 @@ public class AddressBookDBService {
 		}
 		return addressBookDBService;
 	}
-
 	/**
 	 * Function returns a connection
 	 * @return
@@ -40,7 +39,7 @@ public class AddressBookDBService {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(jdbcurl, userName, password);
 		}
-		catch(Exception e) {
+		catch(Exception exception) {
 			throw new DatabaseException("Connection was unsuccessful");
 		}
 		return connection;
@@ -80,8 +79,8 @@ public class AddressBookDBService {
 		try {
 			connection = this.getConnection();
 			connection.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
 		}
 		try {
 			Statement statement = connection.createStatement();
@@ -154,7 +153,7 @@ public class AddressBookDBService {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 			contactList = getContactData(resultSet);
-		} catch (SQLException e) {
+		} catch (SQLException exception) {
 			throw new DatabaseException("Unable to get Contacts");
 		}
 		return contactList;		

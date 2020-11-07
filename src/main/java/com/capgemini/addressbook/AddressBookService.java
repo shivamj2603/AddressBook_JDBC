@@ -25,6 +25,9 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 
 public class AddressBookService {
+	public enum IOService {
+		CONSOLE_IO, FILE_IO, DB_IO, JSON_IO, CSV_IO, REST_IO
+	};
 	private List<Contact> contactList = new ArrayList<Contact>();
 	private AddressBookDBService addressBookDBService;
 	public AddressBookService() {
@@ -33,37 +36,50 @@ public class AddressBookService {
 	public AddressBookService(List<Contact> contactList){
 		this.contactList = contactList;
 	}
-	public static void writeAddressBook(Map<String, AddressBook> map) {
-		StringBuffer buffer = new StringBuffer("");
-		for(String city : map.keySet()) {
-			map.get(city).getAddressBook().forEach(c -> buffer.append(c.toString().concat("\n")));
+	public static void writeAddressBook(Map<String, AddressBook> map, IOService ioService) throws AddressBookException {
+		if(ioService.equals(IOService.FILE_IO)) {
+			StringBuffer buffer = new StringBuffer("");
+			for(String city : map.keySet()) {
+				map.get(city).getAddressBook().forEach(c -> buffer.append(c.toString().concat("\n")));
+			}
+			try {
+				Path path = Paths.get("./addressbook.txt");
+				Files.write(path, buffer.toString().getBytes());
+			} catch (IOException exception) {
+				throw new AddressBookException("Unable to register contact");
+			}
 		}
-		try {
-			Path path = Paths.get("./addressbook.txt");
-			Files.write(path, buffer.toString().getBytes());
-		} catch (IOException exception) {
-			exception.printStackTrace();
-		}
-		System.out.println("Data Written Successfully");
 	}
-	public static void writeContactAsCSV(Contact contact) 
-	{ 
-		Path path = Paths.get("addressBook.csv");
-		try { 
-			FileWriter outputfile = new FileWriter(path.toFile(), true); 
-			CSVWriter writer = new CSVWriter(outputfile); 
-			//add data to csv
-			String[] data = contact.toString().split(",");
-			writer.writeNext(data);
-			// closing writer connection 
-			writer.close(); 
-		} 
-		catch (IOException exception) { 
-			exception.printStackTrace(); 
-		} 
+	public static void writeContact(Contact contact,IOService ioService) throws AddressBookException {
+		if(ioService.equals(IOService.CSV_IO)) {
+			Path path = Paths.get("addressBook.csv");
+			try { 
+				FileWriter outputfile = new FileWriter(path.toFile(), true); 
+				CSVWriter writer = new CSVWriter(outputfile); 
+				//add data to csv
+				String[] data = contact.toString().split(",");
+				writer.writeNext(data);
+				// closing writer connection 
+				writer.close(); 
+			} 
+			catch (IOException exception) { 
+				throw new AddressBookException("Unable to add contact to CSV file");
+			} 
+		}
+		if(ioService.equals(IOService.JSON_IO)) {
+			Gson gson = new Gson();
+			String json = gson.toJson(contact);
+			try {
+				FileWriter writer = new FileWriter(Paths.get("addressBook.json").toFile(), true);
+				writer.write(json);
+				writer.close();
+			} catch (IOException exception) {
+				throw new AddressBookException("Unable to write contact to JSON file");
+			}
+		}
 	} 
-	public static void readAddressBookCSV() 
-	{ 
+	public static void readAddressBook(IOService ioService) throws AddressBookException {
+		if(ioService.equals(IOService.CSV_IO)) {
 	    try {  
 	        FileReader filereader = new FileReader(Paths.get("addressBook.csv").toFile()); 
 	        CSVReader csvReader = new CSVReaderBuilder(filereader).build();  
@@ -77,41 +93,28 @@ public class AddressBookService {
 	        } 
 	    } 
 	    catch (Exception exception) { 
-	        exception.printStackTrace(); 
+	    	throw new AddressBookException("Unable to read contact from CSV file");
 	    } 
-	} 
-	public static void writeAsJson(Contact contact) {
-		Gson gson = new Gson();
-		String json = gson.toJson(contact);
-		try {
-			FileWriter writer = new FileWriter(Paths.get("addressBook.json").toFile(), true);
-			writer.write(json);
-			writer.close();
-		} catch (IOException exception) {
-			exception.printStackTrace();
 		}
-		System.out.println(json);	     
-	}
-	
-	public static void readAsJson() {
-		Gson gson = new Gson();
-		BufferedReader br;
-		try {
-			br = new BufferedReader(
-					new FileReader(Paths.get("contact.json").toFile()));
-			JsonStreamParser parser = new JsonStreamParser(br);
-			while(parser.hasNext())
-			{
-				JsonElement element = parser.next();
-				if (element.isJsonObject()) {
-					Contact contact = gson.fromJson(element, Contact.class);
-					System.out.println(contact);
+		if(ioService.equals(IOService.JSON_IO)) {
+			Gson gson = new Gson();
+			BufferedReader br;
+			try {
+				br = new BufferedReader(
+						new FileReader(Paths.get("contact.json").toFile()));
+				JsonStreamParser parser = new JsonStreamParser(br);
+				while(parser.hasNext())
+				{
+					JsonElement element = parser.next();
+					if (element.isJsonObject()) {
+						Contact contact = gson.fromJson(element, Contact.class);
+					}
 				}
+			} catch (Exception exception) {
+				throw new AddressBookException("Unable to read contact from JSON file");
 			}
-		} catch (Exception exception) {
-			exception.printStackTrace();
 		}
-	}
+	} 
 	public int getCount() {
 		return this.contactList.size();
 	}
@@ -129,8 +132,12 @@ public class AddressBookService {
 	 * @throws DatabaseException
 	 * @throws SQLException
 	 */
-	public void addContact(String firstName, String lastName, String city, String state, int zip, String phonenumber, String email, int type) throws DatabaseException, SQLException {
-		addressBookDBService.addContact(firstName, lastName, city, state, zip, phonenumber, email, type);
+	public void addContact(String firstName, String lastName, String city, String state, int zip, String phonenumber, String email, int type) throws DatabaseException{
+		try {
+			addressBookDBService.addContact(firstName, lastName, city, state, zip, phonenumber, email, type);
+		} catch (DatabaseException|SQLException exception) {
+			throw new DatabaseException("Unable to add contact");
+		}
 	}
 	public void addContact(Contact contact) {
 		this.contactList.add(contact);
@@ -148,8 +155,8 @@ public class AddressBookService {
 				try {
 					this.addContact(contact.firstName, contact.lastName, contact.city,
 							contact.state, contact.zip, String.valueOf(contact.phoneNumber), contact.email, contact.type);
-				} catch (SQLException | DatabaseException e) {
-					e.printStackTrace();
+				} catch (DatabaseException exception) {
+					exception.getMessage();
 				}
 				System.out.println("Contact Added: " + Thread.currentThread().getName());
 			};
@@ -157,8 +164,8 @@ public class AddressBookService {
 			thread.start();
 			try {
 				thread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			} catch (InterruptedException exception) {
+				exception.printStackTrace();
 			}
 		});
 	}
@@ -169,11 +176,16 @@ public class AddressBookService {
 	 * @throws DatabaseException
 	 */
 	public List<Contact> readContactDBData() throws DatabaseException {
-        this.contactList = addressBookDBService.readData();
+		this.contactList = addressBookDBService.readData();
 		return this.contactList;
 	}
-	public void updateContactData(String firstName, String lastName, long phone) throws DatabaseException, SQLException{
-		int result = addressBookDBService.updateContactData(firstName, lastName, phone);
+	public void updateContactData(String firstName, String lastName, long phone) throws DatabaseException{
+		int result;
+		try {
+			result = addressBookDBService.updateContactData(firstName, lastName, phone);
+		} catch (DatabaseException|SQLException exception) {
+			throw new DatabaseException("Unable to update contact");
+		}
 		if(result == 0) {
 			return;
 		}
@@ -201,7 +213,7 @@ public class AddressBookService {
 	 * @throws DatabaseException
 	 * @throws SQLException
 	 */
-	public boolean checkContactDataSync(String firstName, String lastName) throws DatabaseException, SQLException {
+	public boolean checkContactDataSync(String firstName, String lastName) throws DatabaseException{
 		List<Contact> contactList = addressBookDBService.getContactData(firstName, lastName);
 		return contactList.get(0).equals(getContact(firstName, lastName));
 	}
